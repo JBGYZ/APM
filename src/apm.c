@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <mpi.h>
+#include <omp.h>
 
 #define APM_DEBUG 0
 
@@ -261,7 +262,12 @@ main( int argc, char ** argv )
                   (size_pattern+1) * sizeof( int ) ) ;
           return 1 ;
         }
+
+        #pragma omp parallel shared(matches_tmp){
+
+        
         /* Traverse the input data up to the end of the file */
+        #pragma omp for
         for ( i = 0 ; i < n_bytes ; i++ ) 
         {
           int distance = 0 ;
@@ -283,14 +289,17 @@ main( int argc, char ** argv )
           distance = levenshtein( pattern[j], &buf[i], size, column ) ;
 
           if ( distance <= approx_factor ) {
+              #pragma omp atomic
               matches_tmp++ ;
           }
+        }
       }
 
       free( column );
       MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
       }
+      
 
 
   }
