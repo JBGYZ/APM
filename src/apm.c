@@ -9,7 +9,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include <mpi.h>
 
 #define APM_DEBUG 0
 
@@ -113,7 +112,6 @@ int levenshtein(char *s1, char *s2, int len, int * column) {
 int 
 main( int argc, char ** argv )
 {
-  int rankMPI, sizeMPI;
   char ** pattern ;
   char * filename ;
   int approx_factor = 0 ;
@@ -124,17 +122,6 @@ main( int argc, char ** argv )
   double duration ;
   int n_bytes ;
   int * n_matches ;
-  int matches_tmp ;
-
-  /* MPI Initialization */
-  MPI_Init(&argc, &argv);
-
-  /* Get the rank of the current task and the number
-   * of MPI processe
-   */
-  MPI_Comm_rank(MPI_COMM_WORLD, &rankMPI);
-  MPI_Comm_size(MPI_COMM_WORLD, &sizeMPI);
-  MPI_Status status;
 
   /* Check number of arguments */
   if ( argc < 4 ) 
@@ -153,11 +140,6 @@ main( int argc, char ** argv )
 
   /* Get the number of patterns that the user wants to search for */
   nb_patterns = argc - 3 ;
-
-  int quotient = nb_patterns/sizeMPI;
-  int reste = nb_patterns%sizeMPI;
-
-
 
   /* Fill the pattern array */
   pattern = (char **)malloc( nb_patterns * sizeof( char * ) ) ;
@@ -202,6 +184,14 @@ main( int argc, char ** argv )
       return 1 ;
   }
 
+  /* Allocate the array of matches */
+  n_matches = (int *)malloc( nb_patterns * sizeof( int ) ) ;
+  if ( n_matches == NULL )
+  {
+      fprintf( stderr, "Error: unable to allocate memory for %ldB\n",
+              nb_patterns * sizeof( int ) ) ;
+      return 1 ;
+  }
 
   /*****
    * BEGIN MAIN LOOP
@@ -210,92 +200,51 @@ main( int argc, char ** argv )
   /* Timer start */
   gettimeofday(&t1, NULL);
 
+  /* Check each pattern one by one */
+  for ( i = 0 ; i < nb_patterns ; i++ )
+  {
+      int size_pattern = strlen(pattern[i]) ;
+      int * column ;
 
-  if(rankMPI == 0) {
-    /* Allocate the array of matches */
-    n_matches = (int *)malloc( nb_patterns * sizeof( int ) ) ;
+      /* Initialize the number of matches to 0 */
+      n_matches[i] = 0 ;
 
-    if ( n_matches == NULL ) {
-        fprintf( stderr, "Error: unable to allocate memory for %ldB\n",
-              nb_patterns * sizeof( int ) ) ;
-        return 1 ;
-    }
-
-    for(j=0; j<n_matches; j++){
-        MPI_Recv(&n_matches[j], 1, MPI_INT, MPI_ANY_SOURCE,
-      j, MPI_COMM_WORLD, &status);
-
-        /* Timer stop for pattern j */
-        gettimeofday(&t2, NULL);
-        duration = (t2.tv_sec -t1.tv_sec)+((t2.tv_usec-t1.tv_usec)/1e6);
-        printf( "APM done for pattern j in %lf s, calculated by rank %d \n", duration, status.MPI_SOURCE) ;
-
-    }
-
-    /* Timer stop */
-    gettimeofday(&t2, NULL);
-
-    duration = (t2.tv_sec -t1.tv_sec)+((t2.tv_usec-t1.tv_usec)/1e6);
-
-    printf( "APM done in %lf s, calculated with %d workers \n", duration, sizeMPI) ;
-
-    /*****
-    * END MAIN LOOP
-    ******/
-
-    for ( i = 0 ; i < nb_patterns ; i++ )
-    {
-        printf( "Number of matches for pattern <%s>: %d\n", 
-            pattern[i], n_matches[i] ) ;
-    }
-
-  } else {
-      for(j=0; rankMPI-1 + (sizeMPI-1)*j<m; j++){
-        int size_pattern = strlen(pattern[j]) ;
-        int * column ;
-        matches_tmp = 0;
-        column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
-        if ( column == NULL ) 
-        {
+      column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
+      if ( column == NULL ) 
+      {
           fprintf( stderr, "Error: unable to allocate memory for column (%ldB)\n",
                   (size_pattern+1) * sizeof( int ) ) ;
           return 1 ;
-        }
-        /* Traverse the input data up to the end of the file */
-        for ( i = 0 ; i < n_bytes ; i++ ) 
-        {
+      }
+
+      /* Traverse the input data up to the end of the file */
+      for ( j = 0 ; j < n_bytes ; j++ ) 
+      {
           int distance = 0 ;
           int size ;
 
 #if APM_DEBUG
-          if ( i % 100 == 0 )
+          if ( j % 100 == 0 )
           {
-          printf( "Procesing byte %d (out of %d)\n", i, n_bytes ) ;
+          printf( "Procesing byte %d (out of %d)\n", j, n_bytes ) ;
           }
 #endif
 
           size = size_pattern ;
-          if ( n_bytes - i < size_pattern )
+          if ( n_bytes - j < size_pattern )
           {
-              size = n_bytes - i ;
+              size = n_bytes - j ;
           }
 
-          distance = levenshtein( pattern[j], &buf[i], size, column ) ;
+          distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
-              matches_tmp++ ;
+              n_matches[i]++ ;
           }
       }
 
       free( column );
-      MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
-
-      }
-
-
   }
-
-
 
   /* Timer stop */
   gettimeofday(&t2, NULL);
