@@ -193,10 +193,6 @@ main( int argc, char ** argv )
   }
 
 
-  printf( "Approximate Pattern Mathing: "
-          "looking for %d pattern(s) in file %s w/ distance of %d\n", 
-          nb_patterns, filename, approx_factor ) ;
-
   buf = read_input_file( filename, &n_bytes ) ;
   if ( buf == NULL )
   {
@@ -215,6 +211,9 @@ main( int argc, char ** argv )
   if(rankMPI == 0) {
     /* Allocate the array of matches */
     n_matches = (int *)malloc( nb_patterns * sizeof( int ) ) ;
+    printf( "Approximate Pattern Mathing: "
+          "looking for %d pattern(s) in file %s w/ distance of %d\n", 
+          nb_patterns, filename, approx_factor ) ;
 
     if ( n_matches == NULL ) {
         fprintf( stderr, "Error: unable to allocate memory for %ldB\n",
@@ -222,7 +221,7 @@ main( int argc, char ** argv )
         return 1 ;
     }
 
-    for(j=0; j<n_matches; j++){
+    for(j=0; j<nb_patterns; j++){
         MPI_Recv(&n_matches[j], 1, MPI_INT, MPI_ANY_SOURCE,
       j, MPI_COMM_WORLD, &status);
 
