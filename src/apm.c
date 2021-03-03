@@ -228,7 +228,7 @@ main( int argc, char ** argv )
         /* Timer stop for pattern j */
         gettimeofday(&t2, NULL);
         duration = (t2.tv_sec -t1.tv_sec)+((t2.tv_usec-t1.tv_usec)/1e6);
-        printf( "APM done for pattern j in %lf s, calculated by rank %d \n", duration, status.MPI_SOURCE) ;
+        printf( "APM done for pattern <%s> in %lf s, calculated by rank %d \n", pattern[j], duration, status.MPI_SOURCE) ;
 
     }
 
