@@ -4,7 +4,7 @@ OBJ_DIR=obj
 
 CC=gcc
 CFLAGS=-O3 -I$(HEADER_DIR) -Wall
-LDFLAGS=
+LDFLAGS=-fopenmp
 
 SRC= apm.c
 
