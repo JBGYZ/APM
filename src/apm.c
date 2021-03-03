@@ -221,7 +221,7 @@ main( int argc, char ** argv )
         return 1 ;
     }
 
-    for(j=0; j<n_matches; j++){
+    for(j=0; j<nb_patterns; j++){
         MPI_Recv(&n_matches[j], 1, MPI_INT, MPI_ANY_SOURCE,
       j, MPI_COMM_WORLD, &status);
 
