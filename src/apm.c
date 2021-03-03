@@ -205,8 +205,8 @@ main( int argc, char ** argv )
   gettimeofday(&t1, NULL);
 
   /* Check each pattern one by one */
-  #pragma omp parallel {
-
+  #pragma omp parallel 
+  {
   #pragma omp for 
   for( i = 0 ; i < nb_patterns ; i++ )
   {
@@ -226,8 +226,8 @@ main( int argc, char ** argv )
 
       /* Traverse the input data up to the end of the file */
       matches_tmp = 0;
-      #pragma omp parallel shared(matches_tmp) {
-          
+      #pragma omp parallel shared(matches_tmp) 
+      {  
       #pragma omp for 
       for ( j = 0 ; j < n_bytes ; j++ ) 
       {
