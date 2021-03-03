@@ -124,7 +124,6 @@ main( int argc, char ** argv )
   int n_bytes ;
   int * n_matches ;
   int matches_tmp;
-  int * column ;
   int size_pattern ;
 
   /* Check number of arguments */
@@ -211,7 +210,7 @@ main( int argc, char ** argv )
   for( i = 0 ; i < nb_patterns ; i++ )
   {
       size_pattern = strlen(pattern[i]) ;
-      
+      int * column ;
 
       /* Initialize the number of matches to 0 */
       n_matches[i] = 0 ;
