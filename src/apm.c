@@ -293,7 +293,12 @@ main( int argc, char ** argv )
           }
         }
       }
+      /* Timer stop */
+      gettimeofday(&t2, NULL);
 
+      duration = (t2.tv_sec -t1.tv_sec)+((t2.tv_usec-t1.tv_usec)/1e6);
+
+      printf( "APM done for pattern <%s> in %lf s, calculated by rank %d \n", pattern[j], duration, status.MPI_SOURCE) ;
       free( column );
       MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
