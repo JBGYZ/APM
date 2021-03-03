@@ -117,13 +117,15 @@ main( int argc, char ** argv )
   char * filename ;
   int approx_factor = 0 ;
   int nb_patterns = 0 ;
-  int j ;
+  int i, j ;
   char * buf ;
   struct timeval t1, t2;
   double duration ;
   int n_bytes ;
   int * n_matches ;
   int matches_tmp;
+  int * column ;
+  int size_pattern ;
 
   /* Check number of arguments */
   if ( argc < 4 ) 
@@ -204,12 +206,12 @@ main( int argc, char ** argv )
 
   /* Check each pattern one by one */
   #pragma omp parallel {
-      int i;
+
   #pragma omp for 
   for( i = 0 ; i < nb_patterns ; i++ )
   {
-      int size_pattern = strlen(pattern[i]) ;
-      int * column ;
+      size_pattern = strlen(pattern[i]) ;
+      
 
       /* Initialize the number of matches to 0 */
       n_matches[i] = 0 ;
