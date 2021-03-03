@@ -221,7 +221,6 @@ main( int argc, char ** argv )
       {
           fprintf( stderr, "Error: unable to allocate memory for column (%ldB)\n",
                   (size_pattern+1) * sizeof( int ) ) ;
-          return 1 ;
       }
 
       /* Traverse the input data up to the end of the file */
