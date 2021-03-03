@@ -296,23 +296,5 @@ main( int argc, char ** argv )
   }
 
 
-
-  /* Timer stop */
-  gettimeofday(&t2, NULL);
-
-  duration = (t2.tv_sec -t1.tv_sec)+((t2.tv_usec-t1.tv_usec)/1e6);
-
-  printf( "APM done in %lf s\n", duration ) ;
-
-  /*****
-   * END MAIN LOOP
-   ******/
-
-  for ( i = 0 ; i < nb_patterns ; i++ )
-  {
-      printf( "Number of matches for pattern <%s>: %d\n", 
-              pattern[i], n_matches[i] ) ;
-  }
-
   return 0 ;
 }
