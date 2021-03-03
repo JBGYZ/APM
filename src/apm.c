@@ -251,7 +251,7 @@ main( int argc, char ** argv )
     }
 
   } else {
-      for(j=0; rankMPI-1 + (sizeMPI-1)*j<m; j++){
+      for(j=0; rankMPI-1 + (sizeMPI-1)*j<nb_patterns; j++){
         int size_pattern = strlen(pattern[j]) ;
         int * column ;
         matches_tmp = 0;
