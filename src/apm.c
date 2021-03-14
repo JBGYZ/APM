@@ -280,7 +280,7 @@ main( int argc, char ** argv )
               size = n_bytes - i ;
           }
 
-          distance = levenshtein( pattern[j], &buf[i], size, column ) ;
+          distance = levenshtein( pattern[rankMPI-1 + (sizeMPI-1)*j], &buf[i], size, column ) ;
 
           if ( distance <= approx_factor ) {
               matches_tmp++ ;
