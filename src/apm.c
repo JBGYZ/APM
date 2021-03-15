@@ -221,9 +221,12 @@ main( int argc, char ** argv )
       {  
       #pragma omp for reduction(+:matches_tmp)
       for ( j = 0 ; j < n_bytes ; j++ ) 
-      {
+      {   
           int distance = 0 ;
           int size ;
+          int rank = omp_get_thread_num();
+          int nb_threads = omp_get_num_threads();
+          printf("Hello from thread %d/%d\n", rank, nb_threads);
       
 #if APM_DEBUG
           if ( j % 100 == 0 )
