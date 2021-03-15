@@ -299,7 +299,7 @@ main( int argc, char ** argv )
       }
 
       gettimeofday(&t4, NULL);
-      duration = (int) ((t4.tv_sec -t3.tv_sec)+((t4.tv_usec-t3.tv_usec)/1e6))*100;
+      duration = (int) ((t4.tv_sec -t3.tv_sec)+((t4.tv_usec-t3.tv_usec)/1e6))*100000;
       // printf( "OpenMP part done in %lf s, calculated by rank %d \n", duration) ;
 
       free( column );
