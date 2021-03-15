@@ -24,7 +24,7 @@ salloc -N 1 -n 4 mpirun ./apm approximation_factor dna_database pattern1 pattern
 salloc -N 1 -n 9 mpirun ./apm 2 ./dna/chr9.fa AAAA AAAA AAAA AAAA AAAA AAAA AAAA AAAA
 
 ### gpu branch: 
-./test approximation_factor dna_database pattern1 pattern2
+./apm_gpu approximation_factor dna_database pattern1 pattern2
 
-./test 2 ./dna/chr9.fa AAAA AAAA AAAA AAAA AAAA AAAA AAAA AAAA
+./apm_gpu 2 ./dna/chr9.fa AAAA AAAA AAAA AAAA AAAA AAAA AAAA AAAA
 
