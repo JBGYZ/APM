@@ -204,9 +204,6 @@ main( int argc, char ** argv )
   gettimeofday(&t1, NULL);
 
   /* Check each pattern one by one */
-  #pragma omp parallel 
-  {
-  #pragma omp for 
   for( i = 0 ; i < nb_patterns ; i++ )
   {
       size_pattern = strlen(pattern[i]) ;
@@ -244,8 +241,6 @@ main( int argc, char ** argv )
           {
               size = n_bytes - j ;
           }
-          printf( "Hello from thread %d/%d  \n",
-                    omp_get_thread_num(), omp_get_num_threads()) ;
           distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
@@ -257,7 +252,7 @@ main( int argc, char ** argv )
       n_matches[i] = matches_tmp;
       free( column );
   }
-  }
+  
 
   /* Timer stop */
   gettimeofday(&t2, NULL);
