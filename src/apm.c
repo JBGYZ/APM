@@ -244,7 +244,7 @@ main( int argc, char ** argv )
           distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
-              
+              #pragma omp atomic
               matches_tmp++ ;
           }
       }
