@@ -221,7 +221,7 @@ main( int argc, char ** argv )
 
       /* Traverse the input data up to the end of the file */
       matches_tmp = 0;
-      #pragma omp parallel 
+      #pragma omp parallel shared(matches_tmp)
       {  
       #pragma omp for 
       for ( j = 0 ; j < n_bytes ; j++ ) 
@@ -244,7 +244,7 @@ main( int argc, char ** argv )
           distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
-              #pragma omp atomic
+              
               matches_tmp++ ;
           }
       }
