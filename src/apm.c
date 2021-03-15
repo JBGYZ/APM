@@ -209,6 +209,7 @@ main( int argc, char ** argv )
 
 
   if(rankMPI == 0) {
+    omp_set_num_threads(1);
     /* Allocate the array of matches */
     n_matches = (int *)malloc( nb_patterns * sizeof( int ) ) ;
     printf( "Approximate Pattern Mathing: "
@@ -250,6 +251,7 @@ main( int argc, char ** argv )
     }
 
   } else {
+      omp_set_num_threads(6);
       for(j=0; rankMPI-1 + (sizeMPI-1)*j<nb_patterns; j++){
         int size_pattern = strlen(pattern[j]) ;
         int * column ;
