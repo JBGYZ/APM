@@ -207,10 +207,6 @@ main( int argc, char ** argv )
   for( i = 0 ; i < nb_patterns ; i++ )
   {
       size_pattern = strlen(pattern[i]) ;
-      int * column;
-      
-
-      column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
       /* Initialize the number of matches to 0 */
       n_matches[i] = 0 ;
 
@@ -251,8 +247,11 @@ main( int argc, char ** argv )
       }
       }
       n_matches[i] = matches_tmp;
-
-      free(column);
+      
+      for ( j = 0 ; j < omp_get_num_threads() ; j++ ) {
+           free(columns[j])
+      }
+      free(columns);
   }
   
 
