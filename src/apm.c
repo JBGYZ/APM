@@ -262,7 +262,7 @@ main( int argc, char ** argv )
           return 1 ;
         }
 
-        #pragma omp parallel shared(matches_tmp)
+        #pragma omp parallel 
         {
         /* Traverse the input data up to the end of the file */
         int ** columns;
@@ -270,7 +270,7 @@ main( int argc, char ** argv )
         for ( j = 0 ; j < omp_get_num_threads() ; j++ ) {
            columns[j] = (int *)malloc( (size_pattern+1) * sizeof( int ) );
         }
-        #pragma omp for
+        #pragma omp for reduction(+:matches_tmp)
         for ( i = 0 ; i < n_bytes ; i++ ) 
         {
           int distance = 0 ;
@@ -292,14 +292,13 @@ main( int argc, char ** argv )
           distance = levenshtein( pattern[rankMPI-1 + (sizeMPI-1)*j], &buf[i], size, columns[omp_get_thread_num()] ) ;
 
           if ( distance <= approx_factor ) {
-              #pragma omp atomic
-              matches_tmp++ ;
+              matches_tmp = matches_tmp + 1 ;
           }
         }
       }
 
       
-      free( column );
+
       MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
       }
