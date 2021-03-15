@@ -244,7 +244,7 @@ main( int argc, char ** argv )
           distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
-              matches_tmp++ ;
+              matches_tmp = matches_tmp + 1 ;
           }
       }
       }
