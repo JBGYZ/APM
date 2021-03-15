@@ -208,6 +208,11 @@ main( int argc, char ** argv )
   {
       size_pattern = strlen(pattern[i]) ;
       int * column;
+      int ** columns;
+      columns = (int **)malloc( omp_get_num_threads() * sizeof( int * ) ) ;
+      for ( j = 0 ; j < omp_get_num_threads() ; j++ ) {
+        columns[j] = (int *)malloc( (size_pattern+1) * sizeof( int ) );
+      }
 
       column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
       /* Initialize the number of matches to 0 */
@@ -237,7 +242,7 @@ main( int argc, char ** argv )
           {
               size = n_bytes - j ;
           }
-          distance = levenshtein( pattern[i], &buf[j], size, column ) ;
+          distance = levenshtein( pattern[i], &buf[j], size, columns[omp_get_thread_num()] ) ;
 
           if ( distance <= approx_factor ) {
               matches_tmp = matches_tmp + 1 ;
