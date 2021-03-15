@@ -242,7 +242,7 @@ main( int argc, char ** argv )
           {
               size = n_bytes - j ;
           }
-          distance = levenshtein( pattern[i], &buf[j], size, columns[omp_get_thread_num()] ) ;
+          distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
               matches_tmp = matches_tmp + 1 ;
