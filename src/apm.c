@@ -290,6 +290,10 @@ main( int argc, char ** argv )
               size = n_bytes - i ;
           }
 
+          int rank1 = omp_get_thread_num();
+    int nb_threads1 = omp_get_num_threads();
+    printf("HelloHelloHello from thread %d/%d\n", rank1, nb_threads1);
+
           distance = levenshtein( pattern[rankMPI-1 + (sizeMPI-1)*j], &buf[i], size, columns[omp_get_thread_num()] ) ;
 
           if ( distance <= approx_factor ) {
