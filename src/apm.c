@@ -212,7 +212,7 @@ main( int argc, char ** argv )
       /* Initialize the number of matches to 0 */
       n_matches[i] = 0 ;
 
-      column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
+      
       if ( column == NULL ) 
       {
           fprintf( stderr, "Error: unable to allocate memory for column (%ldB)\n",
@@ -228,7 +228,7 @@ main( int argc, char ** argv )
       {
           int distance = 0 ;
           int size ;
-
+          column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
 #if APM_DEBUG
           if ( j % 100 == 0 )
           {
