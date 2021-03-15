@@ -125,6 +125,7 @@ main( int argc, char ** argv )
   int n_bytes ;
   int * n_matches ;
   int matches_tmp ;
+  char host_name[HOST_NAME_MAX];
 
   /* MPI Initialization */
   MPI_Init(&argc, &argv);
@@ -236,8 +237,10 @@ main( int argc, char ** argv )
     gettimeofday(&t2, NULL);
 
     duration = (t2.tv_sec -t1.tv_sec)+((t2.tv_usec-t1.tv_usec)/1e6);
-
-    printf( "APM done in %lf s, calculated with %d workers \n", duration, sizeMPI) ;
+    
+    
+    gethostname(host_name, HOST_NAME_MAX);
+    printf( "APM done in %lf s, calculated with %d workers on machine%s \n", duration, sizeMPI, host_name) ;
 
     /*****
     * END MAIN LOOP
@@ -286,7 +289,9 @@ main( int argc, char ** argv )
               matches_tmp++ ;
           }
       }
-
+      gethostname(host_name, HOST_NAME_MAX);
+      printf("Calculated from host %s\n",
+           host_name);
       free( column );
       MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
