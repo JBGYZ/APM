@@ -16,7 +16,7 @@ $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $^
 
 apm:$(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
