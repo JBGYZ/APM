@@ -266,9 +266,10 @@ main( int argc, char ** argv )
         {
         /* Traverse the input data up to the end of the file */
         int ** columns;
+        int z;
         columns = (int **)malloc( omp_get_num_threads() * sizeof( int * ) ) ;
-        for ( j = 0 ; j < omp_get_num_threads() ; j++ ) {
-           columns[j] = (int *)malloc( (size_pattern+1) * sizeof( int ) );
+        for ( z = 0 ; z < omp_get_num_threads() ; z++ ) {
+           columns[z] = (int *)malloc( (size_pattern+1) * sizeof( int ) );
         }
         #pragma omp for reduction(+:matches_tmp)
         for ( i = 0 ; i < n_bytes ; i++ ) 
@@ -298,7 +299,7 @@ main( int argc, char ** argv )
       }
 
       
-
+      free( column );
       MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
       }
