@@ -216,11 +216,6 @@ main( int argc, char ** argv )
       n_matches[i] = 0 ;
 
       
-      if ( column == NULL ) 
-      {
-          fprintf( stderr, "Error: unable to allocate memory for column (%ldB)\n",
-                  (size_pattern+1) * sizeof( int ) ) ;
-      }
 
       /* Traverse the input data up to the end of the file */
       matches_tmp = 0;
@@ -252,7 +247,11 @@ main( int argc, char ** argv )
       }
       }
       n_matches[i] = matches_tmp;
-      free( column );
+
+      for(j = 0 ; j < omp_get_num_threads() ; j++){
+        free(columns[j]);
+      }
+      free( columns );
   }
   
 
