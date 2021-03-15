@@ -300,10 +300,10 @@ main( int argc, char ** argv )
 
       gettimeofday(&t4, NULL);
       duration = (t4.tv_sec -t3.tv_sec)+((t4.tv_usec-t3.tv_usec)/1e6);
-      printf( "OpenMP part done in %lf s, calculated by rank %d \n", duration) ;
+      // printf( "OpenMP part done in %lf s, calculated by rank %d \n", duration) ;
 
       free( column );
-      MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
+      MPI_Send(&duration, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
       }
       
