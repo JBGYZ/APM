@@ -244,7 +244,8 @@ main( int argc, char ** argv )
           {
               size = n_bytes - j ;
           }
-
+          printf( "Hello from thread %d/%d  \n",
+                    omp_get_thread_num(), omp_get_num_threads()) ;
           distance = levenshtein( pattern[i], &buf[j], size, column ) ;
 
           if ( distance <= approx_factor ) {
