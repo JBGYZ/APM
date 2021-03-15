@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <mpi.h>
+#include <limits.h>
 
 #define APM_DEBUG 0
 
