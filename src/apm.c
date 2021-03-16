@@ -253,15 +253,7 @@ main( int argc, char ** argv )
   } else {
       for(j=0; rankMPI-1 + (sizeMPI-1)*j<nb_patterns; j++){
         int size_pattern = strlen(pattern[j]) ;
-        int * column ;
         matches_tmp = 0;
-        column = (int *)malloc( (size_pattern+1) * sizeof( int ) ) ;
-        if ( column == NULL ) 
-        {
-          fprintf( stderr, "Error: unable to allocate memory for column (%ldB)\n",
-                  (size_pattern+1) * sizeof( int ) ) ;
-          return 1 ;
-        }
         gettimeofday(&t3, NULL);
         #pragma omp parallel 
         {
@@ -297,6 +289,10 @@ main( int argc, char ** argv )
               matches_tmp = matches_tmp + 1 ;
           }
         }
+        for ( z = 0 ; z < omp_get_num_threads() ; z++ ) {
+           free(columns[z]);
+        }
+        free(columns);
       }
 
       //gettimeofday(&t4, NULL);
@@ -304,7 +300,6 @@ main( int argc, char ** argv )
       // printf( "OpenMP part done in %lf s, calculated by rank %d \n", duration) ;
 
 
-      free( column );
       MPI_Send(&matches_tmp, 1, MPI_INT, 0, rankMPI-1 + (sizeMPI-1)*j, MPI_COMM_WORLD);
 
       }
