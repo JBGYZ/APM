@@ -245,13 +245,15 @@ main( int argc, char ** argv )
               matches_tmp = matches_tmp + 1 ;
           }
       }
+      for ( j = 0 ; j < omp_get_num_threads() ; j++ ) {
+           free(columns[j]);
+      }
+      free(columns);
+
       }
       n_matches[i] = matches_tmp;
       
-      for ( j = 0 ; j < omp_get_num_threads() ; j++ ) {
-           free(columns[j])
-      }
-      free(columns);
+      
   }
   
 
